@@ -19,7 +19,7 @@ Run it from a checkout of the UI app, on the branch whose open PR should collect
 
 - **One theme per round**, such as *discoverability*, *feedback*, *error prevention*, or *consistency*.
 - **2–5 small, focused commits** on the current branch. Each commit names the surface it changes and cites the Nielsen heuristic or Krug principle behind the fix.
-- **One push at the end of the round.** The PR title and body are then updated with an `### Round N — <theme>` section.
+- **One push at the end of the round.** The round is added to the PR body as an `### Round N — <theme>` section, and the PR title's fix count is updated. In a multi-round batch, that edit happens once, after the last round.
 
 The skill stops early when a round finds fewer than 2 well-grounded candidates, instead of padding the PR with nitpicks. See the *When to stop* section of the skill file.
 
