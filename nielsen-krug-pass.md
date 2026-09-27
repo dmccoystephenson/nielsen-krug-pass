@@ -126,8 +126,10 @@ principle in parentheses.>
 <one paragraph: what the fix does. Use plain language; this is the
 "why I made the change" for someone reading the PR a year from now.>
 
-Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+<the harness's attribution trailer, if it specifies one>
 ```
+
+Don't hardcode a model name in the trailer. Use the attribution line your harness gives you, so the commit credits the model that actually wrote it. If the harness gives none, leave the line out.
 
 Examples that follow this shape live on PRs like Preponderous-Software/roam#358 — read a few before writing your own if you want the cadence.
 
