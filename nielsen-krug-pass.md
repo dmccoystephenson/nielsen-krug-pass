@@ -48,11 +48,11 @@ Cite by number / name when writing commit messages — it gives the rationale an
 Read what's on this branch already so you don't re-fix something.
 
 ```bash
-# Default-branch ref (usually main)
-DEFAULT_BRANCH=$(gh repo view --json defaultBranchRef -q .defaultBranchRef.name)
+# Default-branch name (usually main) — read the output, then use it below
+gh repo view --json defaultBranchRef -q .defaultBranchRef.name
 
-# Commits on this PR
-git log --oneline origin/$DEFAULT_BRANCH..HEAD
+# Commits on this PR (replace <default-branch> with the name printed above)
+git log --oneline origin/<default-branch>..HEAD
 
 # Open PR for this branch (so you know what to update at the end)
 gh pr view --json number,title,url
@@ -74,6 +74,8 @@ Survey candidates for that theme by reading the relevant screen / view files. Th
 - Affordances that look the same whether or not they're actionable.
 
 When in doubt, run a small `Explore` agent against the codebase asking it to flag candidates for the theme — but verify each candidate by reading the actual file, because Explore reads excerpts and sometimes confidently misreports.
+
+If your session has no agent-spawning tool, survey candidates yourself instead: search for the theme's telltale patterns (e.g. hard-coded labels, empty error handlers, debug-only flags) with your search tools, then read the matching files. The same rule applies — every candidate must be confirmed in the actual file before you fix it.
 
 ### 3 — Implement one fix at a time
 
@@ -166,7 +168,13 @@ Long-running usability-pass batch. Every commit is one self-contained Nielsen / 
 ...
 ```
 
-Use `gh pr edit <number> --title "<title>" --body "$(cat <<'EOF' ... EOF)"` with a heredoc to preserve formatting.
+Write the body to a file with your file-writing tool, then pass it by file to preserve formatting:
+
+```bash
+gh pr edit <number> --title "<title>" --body-file <path-to-body-file>
+```
+
+Don't inline the body with shell command substitution or a heredoc; some harnesses reject that before it reaches the shell.
 
 ---
 
@@ -188,19 +196,20 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`gh repo view`, `gh pr view`, `gh pr edit`).
+   - Commands and flags still exist (`gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The commit message format matches the cadence on recent PRs.
-3. For each problem found, open a GitHub issue:
-   ```bash
-   gh issue create --repo dmccoystephenson/nielsen-krug-pass \
-     --title "<problem summary>" \
-     --body "$(cat <<'EOF'
+3. For each problem found, write the issue body to a file with your file-writing tool:
+   ```markdown
    **Section:** <which step or section is wrong>
    **Problem:** <what is incorrect>
    **Expected behavior:** <what it should do instead>
-   EOF
-   )"
+   ```
+   Then open a GitHub issue from it:
+   ```bash
+   gh issue create --repo dmccoystephenson/nielsen-krug-pass \
+     --title "<problem summary>" \
+     --body-file <path-to-body-file>
    ```
 4. Report a summary: how many issues were filed, or confirm the skill is up to date.
