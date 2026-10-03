@@ -12,7 +12,7 @@ These apply to every round, every commit. Re-read this section any time before s
 
 - **One round = one push.** Multiple commits per round are fine and often preferable; one PR can grow to dozens. Always push at the end of the round so the PR reflects what you just did.
 - **Skip surfaces already fixed in this PR.** Read `git log --oneline <base>..HEAD` before picking targets. Don't propose fixes that overlap commits already on the branch.
-- **Real impact beats nitpicks.** A fix is worth shipping when (a) a real user will notice it and (b) it cites a specific heuristic or principle. "The button could be 2px wider" is a nitpick. "The button reuses the destructive color of a Delete button" is a finding.
+- **Real impact beats nitpicks.** A fix is worth shipping when (a) a real end user will notice it and (b) it cites a specific heuristic or principle. "The button could be 2px wider" is a nitpick. "The button reuses the destructive color of a Delete button" is a finding.
 - **Prefer rebindable / dynamic values over hard-coded strings.** If the codebase has a keybindings system, status manager, or theme provider, read from it; don't repeat literals.
 - **Stay on the current branch.** Don't open new PRs or branches unless the user asked. The whole point is to keep stacking commits on the one PR.
 - **Autonomous mode is the default for multi-round requests.** When the user says "do N more rounds", do not ask follow-up questions between rounds; make the reasonable judgment call and move on.
@@ -70,7 +70,7 @@ Survey candidates for that theme by reading the relevant screen / view files. Th
 
 - Surfaces with no feedback for failure cases ("nothing happens" is the strongest UX smell).
 - Hard-coded labels that ignore a configuration / binding the app already supports.
-- States that exist in code but are invisible to the user (debug-only labels, silent toggles).
+- States that exist in code but are invisible to the end user (debug-only labels, silent toggles).
 - Affordances that look the same whether or not they're actionable.
 
 When in doubt, run a small `Explore` agent against the codebase asking it to flag candidates for the theme — but verify each candidate by reading the actual file, because Explore reads excerpts and sometimes confidently misreports.
@@ -121,7 +121,7 @@ Each commit names the surface, cites the heuristic, explains why the previous st
 ```
 ux: <surface> — <one-line summary of the fix>
 
-<one paragraph: what the previous state looked like to the user and
+<one paragraph: what the previous state looked like to the end user and
 why that's a problem. Cite the specific Nielsen heuristic or Krug
 principle in parentheses.>
 
@@ -139,7 +139,7 @@ What to avoid:
 - Bullet lists in the body (use prose).
 - Vague "improve X" subject lines (name the surface and the actual change).
 - Citing the heuristic without explaining *why* it applies.
-- Writing "fixed bug" without saying what the user would have observed.
+- Writing "fixed bug" without saying what the end user would have observed.
 
 ---
 
@@ -182,7 +182,7 @@ Don't inline the body with shell command substitution or a heredoc; some harness
 
 Stop the multi-round loop early — and tell the user — when any of these happen:
 
-- You searched honestly and a round produced fewer than 2 candidates that cite a specific heuristic with a concrete user-observable problem.
+- You searched honestly and a round produced fewer than 2 candidates that cite a specific heuristic with a concrete end-user-observable problem.
 - You've been re-touching the same files round after round; the project is approaching saturation for this skill.
 - A fix would require behavior or design decisions you can't reasonably infer from the codebase (e.g. "should deleted items go to a trash folder?"). Those belong in a design conversation, not a polish PR.
 
