@@ -15,6 +15,8 @@ Run it from a checkout of the UI app, on the branch whose open PR should collect
 - `/nielsen-krug-pass` runs a single round.
 - "do N more rounds" runs N rounds back-to-back with no questions in between. The PR description is updated once, after the last round.
 
+If the branch has no open PR, or is the default branch, the skill stops and asks before making any changes.
+
 ## What a round produces
 
 - **One theme per round**, such as *discoverability*, *feedback*, *error prevention*, or *consistency*.

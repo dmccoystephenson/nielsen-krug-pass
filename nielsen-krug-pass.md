@@ -62,6 +62,8 @@ Note:
 - The PR number (you'll edit its title/body at the end).
 - The set of surfaces already touched (skip them when picking targets).
 
+If `gh pr view` reports `no pull requests found for branch`, or the current branch is the default branch, stop before making any edits. Don't commit to the default branch, and don't create a branch or PR on your own. Tell the user and ask whether to create a branch and open a PR for the round. This applies to multi-round requests too. The check runs before the first round, so asking here doesn't break the no-questions-between-rounds rule.
+
 ### 2 — Pick a theme and surfaces
 
 A "round" has a coherent theme — *discoverability*, *feedback*, *error prevention*, *state visibility*, *consistency*, *information scent*, etc. Pick one theme per round so the commits feel like a chapter.
