@@ -97,7 +97,7 @@ After the round's commits are in:
 git push
 ```
 
-Re-read the PR description (`gh pr view --json body -q .body`) and decide whether to update now or wait until the user asks for the next round.
+Re-read the PR description (`gh pr view --json body -q .body`). When to edit it depends on how the skill was invoked:
 
 - **Single-round invocation** (e.g. `/nielsen-krug-pass`): update the PR title to reflect the new fix count and append the new round under an `### Round N — <theme>` heading.
 - **Multi-round invocation** (e.g. "do 5 more rounds"): defer the PR-body update until after the *last* round of the batch. Push between every round, but only edit the PR description once at the end. This avoids spam-editing the PR.
@@ -112,7 +112,7 @@ When the user says "do N more rounds":
 4. After the *last* round: rewrite the PR title and append all new round sections to the body in one PR edit.
 5. Do not stop between rounds to ask for direction. If you genuinely run out of high-signal candidates, say so and stop — don't pad with nitpicks.
 
-If a round produces zero solid candidates after honest searching, ship that observation. "I looked at X, Y, Z; the remaining surfaces are already well-handled" is a valid round result and signals it's time to stop.
+If a round produces fewer than 2 solid candidates after honest searching, stop after that round (see [When to stop](#when-to-stop)); it counts as the last round of the batch for the PR update. Commit and push a single solid candidate if there is one, then report what you searched. "I looked at X, Y, Z; the remaining surfaces are already well-handled" is a valid round result.
 
 ---
 
@@ -147,7 +147,7 @@ What to avoid:
 
 ## PR title and body update
 
-After the last round of a batch:
+After a single round, or after the last round of a multi-round batch (see Step 4):
 
 **Title:** `ux: usability pass — N fixes from Nielsen heuristics + Don't Make Me Think`
 
