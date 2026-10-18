@@ -1,6 +1,6 @@
 # nielsen-krug-pass
 
-Run a usability-pass round on a UI app, evaluated against Nielsen's 10 Heuristics and Krug's *Don't Make Me Think* principles. Each round ships 2–5 small, focused commits on the current branch and pushes them; when the user asks for several rounds at once, they execute back-to-back without re-prompting.
+Run a usability-pass round on a UI app, evaluated against Nielsen's 10 Heuristics and Krug's *Don't Make Me Think* principles. Each round usually ships 2–5 small, focused commits on the current branch and pushes them (a final round may ship fewer when solid candidates run out); when the user asks for several rounds at once, they execute back-to-back without re-prompting.
 
 Useful any time the user wants to keep grinding UX improvements on a project without designing a roadmap first — most often invoked as `/nielsen-krug-pass` or by saying "do N more rounds" after the first one.
 
