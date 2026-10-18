@@ -20,7 +20,7 @@ If the branch has no open PR, or is the default branch, the skill stops and asks
 ## What a round produces
 
 - **One theme per round**, such as *discoverability*, *feedback*, *error prevention*, or *consistency*.
-- **2–5 small, focused commits** on the current branch. Each commit names the surface it changes and cites the Nielsen heuristic or Krug principle behind the fix.
+- **Usually 2–5 small, focused commits** on the current branch. A final round may ship fewer when solid candidates run out. Each commit names the surface it changes and cites the Nielsen heuristic or Krug principle behind the fix.
 - **One push at the end of the round.** The round is added to the PR body as an `### Round N — <theme>` section, and the PR title's fix count is updated. In a multi-round batch, that edit happens once, after the last round.
 
 The skill stops early when a round finds fewer than 2 well-grounded candidates, instead of padding the PR with nitpicks. See the *When to stop* section of the skill file.
