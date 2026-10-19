@@ -55,14 +55,14 @@ gh repo view --json defaultBranchRef -q .defaultBranchRef.name
 git log --oneline origin/<default-branch>..HEAD
 
 # Open PR for this branch (so you know what to update at the end)
-gh pr view --json number,title,url
+gh pr view --json number,title,url,state
 ```
 
 Note:
 - The PR number (you'll edit its title/body at the end).
 - The set of surfaces already touched (skip them when picking targets).
 
-If `gh pr view` reports `no pull requests found for branch`, or the current branch is the default branch, stop before making any edits. Don't commit to the default branch, and don't create a branch or PR on your own. Tell the user and ask whether to create a branch and open a PR for the round. This applies to multi-round requests too. The check runs before the first round, so asking here doesn't break the no-questions-between-rounds rule.
+If `gh pr view` reports `no pull requests found for branch`, its `state` is anything other than `OPEN` (it also returns merged and closed PRs), or the current branch is the default branch, stop before making any edits. Don't commit to the default branch, and don't create a branch or PR on your own. Tell the user and ask whether to create a branch and open a PR for the round. This applies to multi-round requests too. The check runs before the first round, so asking here doesn't break the no-questions-between-rounds rule.
 
 ### 2 — Pick a theme and surfaces
 
