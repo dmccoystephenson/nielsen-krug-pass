@@ -23,7 +23,7 @@ Cite by number / name when writing commit messages — it gives the rationale an
 
 **Nielsen:**
 1. Visibility of system status
-2. Match between system and real world
+2. Match between the system and the real world
 3. User control and freedom
 4. Consistency and standards
 5. Error prevention
