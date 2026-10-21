@@ -48,15 +48,17 @@ Cite by number / name when writing commit messages — it gives the rationale an
 Read what's on this branch already so you don't re-fix something.
 
 ```bash
-# Default-branch name (usually main) — read the output, then use it below
+# Open PR for this branch (so you know what to update at the end) and the branch it targets
+gh pr view --json number,title,url,state,baseRefName
+
+# Default-branch name (usually main) — needed for the check below
 gh repo view --json defaultBranchRef -q .defaultBranchRef.name
 
-# Commits on this PR (replace <default-branch> with the name printed above)
-git log --oneline origin/<default-branch>..HEAD
-
-# Open PR for this branch (so you know what to update at the end)
-gh pr view --json number,title,url,state
+# Commits on this PR (replace <base> with the baseRefName printed above)
+git log --oneline origin/<base>..HEAD
 ```
+
+Use the PR's `baseRefName` for the log range, not the default branch. A PR stacked on another branch targets that branch, and a range against the default branch would also list the parent branch's commits.
 
 Note:
 - The PR number (you'll edit its title/body at the end).
@@ -108,7 +110,7 @@ When the user says "do N more rounds":
 
 1. Decide N themes ahead of time so each round is coherent. Themes should not repeat what's already on the PR.
 2. Run rounds 1 through N back-to-back.
-3. After each round: commit, push, mark the round's task complete.
+3. After each round: commit and push. If you're tracking the rounds in a task list, mark the round's task complete; a session without a task tool can skip this.
 4. After the *last* round: rewrite the PR title and append all new round sections to the body in one PR edit.
 5. Do not stop between rounds to ask for direction. If you genuinely run out of high-signal candidates, say so and stop — don't pad with nitpicks.
 
