@@ -87,7 +87,8 @@ For each fix:
 
 1. Make the edit. Keep diffs small — a fix should typically touch one file and 1–15 lines. If a fix sprawls, split it.
 2. Read the result back if you're unsure it's right.
-3. Commit *before* moving to the next fix. Don't batch unrelated edits into one commit.
+3. Run the project's fastest check that covers the change: its build, type-check, lint, or the tests for the file you edited. If it fails, fix the change or drop it; don't commit a broken fix. If the project has no such check, say so when you report the round.
+4. Commit *before* moving to the next fix. Don't batch unrelated edits into one commit.
 
 Use the [commit message format](#commit-message-format) below.
 
