@@ -51,7 +51,8 @@ Read what's on this branch already so you don't re-fix something.
 # Open PR for this branch (so you know what to update at the end) and the branch it targets
 gh pr view --json number,title,url,state,baseRefName
 
-# Default-branch name (usually main) — needed for the check below
+# Current branch and default-branch name (usually main) — compare them for the check below
+git branch --show-current
 gh repo view --json defaultBranchRef -q .defaultBranchRef.name
 
 # Commits on this PR (replace <base> with the baseRefName printed above)
@@ -201,7 +202,7 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The commit message format matches the cadence on recent PRs.
