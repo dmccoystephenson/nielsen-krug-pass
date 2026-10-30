@@ -11,7 +11,7 @@ Useful any time the user wants to keep grinding UX improvements on a project wit
 These apply to every round, every commit. Re-read this section any time before starting a round.
 
 - **One round = one push.** Multiple commits per round are fine and often preferable; one PR can grow to dozens. Always push at the end of the round so the PR reflects what you just did.
-- **Skip surfaces already fixed in this PR.** Read `git log --oneline <base>..HEAD` before picking targets. Don't propose fixes that overlap commits already on the branch.
+- **Skip surfaces already fixed in this PR.** Read `git log --oneline origin/<base>..HEAD` (Step 1, with `<base>` the PR's `baseRefName`) before picking targets. Don't propose fixes that overlap commits already on the branch.
 - **Real impact beats nitpicks.** A fix is worth shipping when (a) a real end user will notice it and (b) it cites a specific heuristic or principle. "The button could be 2px wider" is a nitpick. "The button reuses the destructive color of a Delete button" is a finding.
 - **Prefer rebindable / dynamic values over hard-coded strings.** If the codebase has a keybindings system, status manager, or theme provider, read from it; don't repeat literals.
 - **Stay on the current branch.** Don't open new PRs or branches unless the user asked. The whole point is to keep stacking commits on the one PR.
