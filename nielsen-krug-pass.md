@@ -139,7 +139,9 @@ principle in parentheses.>
 
 Don't hardcode a model name in the trailer. Use the attribution line your harness gives you, so the commit credits the model that actually wrote it. If the harness gives none, leave the line out.
 
-Examples that follow this shape live on PRs like Preponderous-Software/roam#358 — read a few before writing your own if you want the cadence.
+Write the message to a file with your file-writing tool, then commit with `git commit -F <path-to-message-file>`. Don't pass a multi-paragraph message with shell command substitution or a heredoc; some harnesses reject that before it reaches the shell.
+
+PRs like Preponderous-Software/roam#358 show the subject-line and rationale cadence — read a few before writing your own if you want it. Many of those commits don't match this format: they use bullet lists in the body and a hardcoded model trailer. Where they differ from this section, follow this section.
 
 What to avoid:
 - Bullet lists in the body (use prose).
@@ -202,7 +204,7 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`git branch --show-current`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `git commit -F`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The commit message format matches the cadence on recent PRs.
