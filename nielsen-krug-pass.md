@@ -89,7 +89,7 @@ For each fix:
 1. Make the edit. Keep diffs small — a fix should typically touch one file and 1–15 lines. If a fix sprawls, split it.
 2. Read the result back if you're unsure it's right.
 3. Run the project's fastest check that covers the change: its build, type-check, lint, or the tests for the file you edited. If it fails, fix the change or drop it; don't commit a broken fix. If the project has no such check, say so when you report the round.
-4. Commit *before* moving to the next fix. Don't batch unrelated edits into one commit.
+4. Commit *before* moving to the next fix. Stage the fix's files by name (`git add <paths>`), not with `git add -A` or `git add .`, so nothing else lands in the commit. Don't batch unrelated edits into one commit.
 
 Use the [commit message format](#commit-message-format) below.
 
@@ -141,6 +141,8 @@ Don't hardcode a model name in the trailer. Use the attribution line your harnes
 
 Write the message to a file with your file-writing tool, then commit with `git commit -F <path-to-message-file>`. Don't pass a multi-paragraph message with shell command substitution or a heredoc; some harnesses reject that before it reaches the shell.
 
+Write the file outside the repository, such as in your system's temp directory, so it can't end up in the PR. If your harness only allows writes inside the checkout, use a path the repo ignores, or delete the file right after the command that uses it. `git status` should show no leftover file.
+
 PRs like Preponderous-Software/roam#358 show the subject-line and rationale cadence — read a few before writing your own if you want it. Many of those commits don't match this format: they use bullet lists in the body and a hardcoded model trailer. Where they differ from this section, follow this section.
 
 What to avoid:
@@ -176,7 +178,7 @@ Long-running usability-pass batch. Every commit is one self-contained Nielsen / 
 ...
 ```
 
-Write the body to a file with your file-writing tool, then pass it by file to preserve formatting:
+Write the body to a file with your file-writing tool, placed as [Commit message format](#commit-message-format) describes, then pass it by file to preserve formatting:
 
 ```bash
 gh pr edit <number> --title "<title>" --body-file <path-to-body-file>
@@ -204,11 +206,11 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`git branch --show-current`, `git commit -F`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `git add`, `git commit -F`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The commit message format matches the cadence on recent PRs.
-3. For each problem found, write the issue body to a file with your file-writing tool:
+3. For each problem found, write the issue body to a file with your file-writing tool, placed as [Commit message format](#commit-message-format) describes:
    ```markdown
    **Section:** <which step or section is wrong>
    **Problem:** <what is incorrect>
