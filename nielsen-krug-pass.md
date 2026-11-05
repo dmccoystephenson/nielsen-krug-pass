@@ -103,7 +103,7 @@ git push
 
 Re-read the PR description (`gh pr view --json body -q .body`). When to edit it depends on how the skill was invoked:
 
-- **Single-round invocation** (e.g. `/nielsen-krug-pass`): update the PR title to reflect the new fix count and append the new round under an `### Round N — <theme>` heading.
+- **Single-round invocation** (e.g. `/nielsen-krug-pass`): update the PR title to reflect the new fix count and add the new round under an `### Round N — <theme>` heading, as [PR title and body update](#pr-title-and-body-update) describes.
 - **Multi-round invocation** (e.g. "do 5 more rounds"): defer the PR-body update until after the *last* round of the batch. Push between every round, but only edit the PR description once at the end. This avoids spam-editing the PR.
 
 ### 5 — Multi-round handling
@@ -113,7 +113,7 @@ When the user says "do N more rounds":
 1. Decide N themes ahead of time so each round is coherent. Themes should not repeat what's already on the PR.
 2. Run rounds 1 through N back-to-back.
 3. After each round: commit and push. If you're tracking the rounds in a task list, mark the round's task complete; a session without a task tool can skip this.
-4. After the *last* round: rewrite the PR title and append all new round sections to the body in one PR edit.
+4. After the *last* round: rewrite the PR title and add all new round sections to the body in one PR edit, as [PR title and body update](#pr-title-and-body-update) describes.
 5. Do not stop between rounds to ask for direction. If you genuinely run out of high-signal candidates, say so and stop — don't pad with nitpicks.
 
 If a round produces fewer than 2 solid candidates after honest searching, stop after that round (see [When to stop](#when-to-stop)); it counts as the last round of the batch for the PR update. Commit and push a single solid candidate if there is one, then report what you searched. "I looked at X, Y, Z; the remaining surfaces are already well-handled" is a valid round result.
@@ -178,6 +178,8 @@ Long-running usability-pass batch. Every commit is one self-contained Nielsen / 
 ...
 ```
 
+Put each new round after the last existing round and before `## Test plan`, not at the end of the body, and add the round's observable checks to the test plan. Keep everything else already in the body.
+
 Write the body to a file with your file-writing tool, placed as [Commit message format](#commit-message-format) describes, then pass it by file to preserve formatting:
 
 ```bash
@@ -206,10 +208,10 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`git branch --show-current`, `git add`, `git commit -F`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
-   - The commit message format matches the cadence on recent PRs.
+   - The Preponderous-Software/roam#358 reference still resolves, and *Commit message format* still describes how its commits differ from the format.
 3. For each problem found, write the issue body to a file with your file-writing tool, placed as [Commit message format](#commit-message-format) describes:
    ```markdown
    **Section:** <which step or section is wrong>
