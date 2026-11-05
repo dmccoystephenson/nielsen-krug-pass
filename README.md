@@ -8,12 +8,14 @@ Use it to keep making small UX improvements to a project without planning a road
 
 Copy `nielsen-krug-pass.md` into a Claude Code commands directory, either `.claude/commands/` in the target project or `~/.claude/commands/` for all projects. The file name becomes the command name, `/nielsen-krug-pass`.
 
+The skill needs `git` and the GitHub CLI (`gh`), authenticated for the target repository.
+
 ## Usage
 
 Run it from a checkout of the UI app, on the branch whose open PR should collect the fixes:
 
 - `/nielsen-krug-pass` runs a single round.
-- "do N more rounds" runs N rounds back-to-back with no questions in between. The PR description is updated once, after the last round.
+- "do N more rounds", said after a first round in the same session, runs N rounds back-to-back with no questions in between. The PR description is updated once, after the last round.
 
 If the branch has no open PR, or is the default branch, the skill stops and asks before making any changes.
 
