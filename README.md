@@ -17,7 +17,7 @@ Run it from a checkout of the UI app, on the branch whose open PR should collect
 - `/nielsen-krug-pass` runs a single round.
 - "do N more rounds", said after a first round in the same session, runs N rounds back-to-back with no questions in between. The PR description is updated once, after the last round.
 
-If the branch has no open PR, or is the default branch, the skill stops and asks before making any changes.
+If the branch has no open PR, or is the default branch, the skill stops and asks before making any changes. It also syncs with the remote first, and stops if the local branch and the PR have diverged.
 
 ## What a round produces
 
@@ -25,7 +25,7 @@ If the branch has no open PR, or is the default branch, the skill stops and asks
 - **Usually 2–5 small, focused commits** on the current branch. A final round may ship fewer when solid candidates run out. Each commit names the surface it changes and cites the Nielsen heuristic or Krug principle behind the fix.
 - **One push at the end of the round.** The round is added to the PR body as an `### Round N — <theme>` section, and the PR title's fix count is updated. In a multi-round batch, that edit happens once, after the last round.
 
-The skill stops early when a round finds fewer than 2 well-grounded candidates, instead of padding the PR with nitpicks. See the *When to stop* section of the skill file.
+The skill stops early when a round finds fewer than 2 well-grounded candidates, instead of padding the PR with nitpicks. A round with no commits adds nothing to the PR; the skill reports what it searched instead. See the *When to stop* section of the skill file.
 
 ## License
 

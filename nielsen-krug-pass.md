@@ -54,8 +54,31 @@ gh pr view --json number,title,url,state,baseRefName
 # Current branch and default-branch name (usually main) — compare them for the check below
 git branch --show-current
 gh repo view --json defaultBranchRef -q .defaultBranchRef.name
+```
 
-# Commits on this PR (replace <base> with the baseRefName printed above)
+If `gh pr view` reports `no pull requests found for branch`, its `state` is anything other than `OPEN` (it also returns merged and closed PRs), or the current branch is the default branch, stop before making any edits. Don't commit to the default branch, and don't create a branch or PR on your own. Tell the user and ask whether to create a branch and open a PR for the round. This applies to multi-round requests too. The check runs before the first round, so asking here doesn't break the no-questions-between-rounds rule.
+
+Otherwise, sync with the remote so you see commits pushed to the PR from elsewhere (replace `<base>` with the `baseRefName` and `<number>` with the PR number printed above):
+
+```bash
+# Update origin/<base>; the explicit refspec also works in a clone that tracks only the default branch
+git fetch origin +refs/heads/<base>:refs/remotes/origin/<base>
+
+# Fetch the PR head into FETCH_HEAD
+git fetch origin refs/pull/<number>/head
+
+# Print two counts: commits only on the local branch, then commits only on the PR
+git rev-list --left-right --count HEAD...FETCH_HEAD
+```
+
+Act on the two counts:
+- **Second count is 0:** the local branch has everything on the PR. Continue.
+- **First count is 0, second is not:** the PR is ahead. Run `git merge --ff-only FETCH_HEAD`, then continue. If it refuses because of uncommitted changes, stop and tell the user.
+- **Neither count is 0:** the branches have diverged. Stop before making any edits and tell the user. Don't rebase, merge, or force-push on your own.
+
+Then list the commits on this PR:
+
+```bash
 git log --oneline origin/<base>..HEAD
 ```
 
@@ -64,8 +87,6 @@ Use the PR's `baseRefName` for the log range, not the default branch. A PR stack
 Note:
 - The PR number (you'll edit its title/body at the end).
 - The set of surfaces already touched (skip them when picking targets).
-
-If `gh pr view` reports `no pull requests found for branch`, its `state` is anything other than `OPEN` (it also returns merged and closed PRs), or the current branch is the default branch, stop before making any edits. Don't commit to the default branch, and don't create a branch or PR on your own. Tell the user and ask whether to create a branch and open a PR for the round. This applies to multi-round requests too. The check runs before the first round, so asking here doesn't break the no-questions-between-rounds rule.
 
 ### 2 — Pick a theme and surfaces
 
@@ -101,10 +122,14 @@ After the round's commits are in:
 git push
 ```
 
+If the push is rejected because the PR gained commits during the round, don't force-push. Keep the round's commits local, stop, and tell the user the branches have diverged. In a multi-round batch this ends the batch; the rounds already pushed still get their PR update.
+
 Re-read the PR description (`gh pr view --json body -q .body`). When to edit it depends on how the skill was invoked:
 
 - **Single-round invocation** (e.g. `/nielsen-krug-pass`): update the PR title to reflect the new fix count and add the new round under an `### Round N — <theme>` heading, as [PR title and body update](#pr-title-and-body-update) describes.
 - **Multi-round invocation** (e.g. "do 5 more rounds"): defer the PR-body update until after the *last* round of the batch. Push between every round, but only edit the PR description once at the end. This avoids spam-editing the PR.
+
+A round that ends with no commits adds no `### Round N` section and leaves the title's fix count alone. Report what you searched to the user instead. In a multi-round batch, the rounds before it still get their PR update; if no round in the batch has commits, skip the edit.
 
 ### 5 — Multi-round handling
 
@@ -208,7 +233,7 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`git branch --show-current`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `git fetch`, `git rev-list --left-right --count`, `git merge --ff-only`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The Preponderous-Software/roam#358 reference still resolves, and *Commit message format* still describes how its commits differ from the format.
