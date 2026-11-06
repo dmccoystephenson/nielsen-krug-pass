@@ -222,6 +222,7 @@ Stop the multi-round loop early — and tell the user — when any of these happ
 - You searched honestly and a round produced fewer than 2 candidates that cite a specific heuristic with a concrete end-user-observable problem.
 - You've been re-touching the same files round after round; the project is approaching saturation for this skill.
 - A fix would require behavior or design decisions you can't reasonably infer from the codebase (e.g. "should deleted items go to a trash folder?"). Those belong in a design conversation, not a polish PR.
+- The local branch and the PR have diverged (Step 1 or Step 4). Resolving that is the user's call.
 
 Don't pad. A PR with 25 grounded fixes is better than 40 fixes where the last 15 are wallpaper.
 
