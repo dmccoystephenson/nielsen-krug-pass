@@ -54,9 +54,16 @@ gh pr view --json number,title,url,state,baseRefName
 # Current branch and default-branch name (usually main) — compare them for the check below
 git branch --show-current
 gh repo view --json defaultBranchRef -q .defaultBranchRef.name
+
+# Uncommitted changes to tracked files — no output means there are none
+git status --short --untracked-files=no
 ```
 
+If `git status` prints anything, stop before making any edits and tell the user. Step 3 stages whole files, so those changes could land in a fix's commit. The user decides whether to commit, stash, or discard them.
+
 If `gh pr view` reports `no pull requests found for branch`, its `state` is anything other than `OPEN` (it also returns merged and closed PRs), or the current branch is the default branch, stop before making any edits. Don't commit to the default branch, and don't create a branch or PR on your own. Tell the user and ask whether to create a branch and open a PR for the round. This applies to multi-round requests too. The check runs before the first round, so asking here doesn't break the no-questions-between-rounds rule.
+
+If `gh pr view` fails with any other error, such as `could not determine current branch` on a detached HEAD or an authentication failure, stop before making any edits and tell the user what it printed. Without the PR's number and base, the sync below can't run. Don't create a branch or PR to get past the error.
 
 Otherwise, sync with the remote so you see commits pushed to the PR from elsewhere (replace `<base>` with the `baseRefName` and `<number>` with the PR number printed above):
 
@@ -234,7 +241,7 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`git branch --show-current`, `git fetch`, `git rev-list --left-right --count`, `git merge --ff-only`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `git status --short --untracked-files=no`, `git fetch`, `git rev-list --left-right --count`, `git merge --ff-only`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The Preponderous-Software/roam#358 reference still resolves, and *Commit message format* still describes how its commits differ from the format.
