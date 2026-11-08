@@ -212,6 +212,11 @@ Long-running usability-pass batch. Every commit is one self-contained Nielsen / 
 
 Put each new round after the last existing round and before `## Test plan`, not at the end of the body, and add the round's observable checks to the test plan. Keep everything else already in the body.
 
+If a landmark is missing, add it without moving the text that's already there:
+- **No `### Round` section yet:** put the new round at the end of the `## Summary` section.
+- **No `## Summary`:** add the template's `## Summary` heading and its opening line, then the new round under it. Place them just before `## Test plan` if the body has one, otherwise after the existing text.
+- **No `## Test plan`:** add the heading at the end of the body, followed by the round's checks.
+
 Write the body to a file with your file-writing tool, placed as [Commit message format](#commit-message-format) describes, then pass it by file to preserve formatting:
 
 ```bash
