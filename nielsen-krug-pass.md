@@ -65,14 +65,23 @@ If `gh pr view` reports `no pull requests found for branch`, its `state` is anyt
 
 If `gh pr view` fails with any other error, such as `could not determine current branch` on a detached HEAD or an authentication failure, stop before making any edits and tell the user what it printed. Without the PR's number and base, the sync below can't run. Don't create a branch or PR to get past the error.
 
-Otherwise, sync with the remote so you see commits pushed to the PR from elsewhere (replace `<base>` with the `baseRefName` and `<number>` with the PR number printed above):
+Otherwise, find the remote that hosts the PR. `gh` may look the PR up in a different repository than `origin`. In a fork clone with an `upstream` remote, it can find the PR on `upstream`. Fetching that PR number from `origin` would then get a different PR, or none.
 
 ```bash
-# Update origin/<base>; the explicit refspec also works in a clone that tracks only the default branch
-git fetch origin +refs/heads/<base>:refs/remotes/origin/<base>
+# Each remote's name and URL
+git remote -v
+```
+
+The PR's `url` from `gh pr view` has the form `https://github.com/<owner>/<repo>/pull/<number>`. Use the remote whose URL points at the same `<owner>/<repo>`, ignoring the protocol and any trailing `.git`. That remote is `<remote>` below; it is usually `origin`. If no remote matches, stop before making any edits and tell the user. Don't add a remote on your own.
+
+Sync with that remote so you see commits pushed to the PR from elsewhere (replace `<remote>` with the remote you found, `<base>` with the `baseRefName`, and `<number>` with the PR number printed above):
+
+```bash
+# Update <remote>/<base>; the explicit refspec also works in a clone that tracks only the default branch
+git fetch <remote> +refs/heads/<base>:refs/remotes/<remote>/<base>
 
 # Fetch the PR head into FETCH_HEAD
-git fetch origin refs/pull/<number>/head
+git fetch <remote> refs/pull/<number>/head
 
 # Print two counts: commits only on the local branch, then commits only on the PR
 git rev-list --left-right --count HEAD...FETCH_HEAD
@@ -86,10 +95,10 @@ Act on the two counts:
 Then list the commits on this PR:
 
 ```bash
-git log --oneline origin/<base>..HEAD
+git log --oneline <remote>/<base>..HEAD
 ```
 
-Use the PR's `baseRefName` for the log range, not the default branch. A PR stacked on another branch targets that branch, and a range against the default branch would also list the parent branch's commits.
+Use the PR's `baseRefName` for the log range, not the default branch. A PR stacked on another branch targets that branch, and a range against the default branch would also list the parent branch's commits. The `origin/<base>` range in *Operating principles* means this one: when the PR is hosted on another remote, use `<remote>/<base>` there too.
 
 Note:
 - The PR number (you'll edit its title/body at the end).
@@ -246,7 +255,7 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`git branch --show-current`, `git status --short --untracked-files=no`, `git fetch`, `git rev-list --left-right --count`, `git merge --ff-only`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `git status --short --untracked-files=no`, `git remote -v`, `git fetch`, `git rev-list --left-right --count`, `git merge --ff-only`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The Preponderous-Software/roam#358 reference still resolves, and *Commit message format* still describes how its commits differ from the format.
