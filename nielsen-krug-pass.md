@@ -140,6 +140,8 @@ git push
 
 If the push is rejected because the PR gained commits during the round, don't force-push. Keep the round's commits local, stop, and tell the user the branches have diverged. In a multi-round batch this ends the batch; the rounds already pushed still get their PR update.
 
+If the push fails for any other reason, such as `has no upstream branch` or an authentication error, handle it the same way: keep the commits local, stop, and tell the user what git printed. Don't follow git's `--set-upstream` hint or push to a remote or branch you picked yourself. A push to anything other than the PR's head branch leaves the PR unchanged.
+
 Re-read the PR description (`gh pr view --json body -q .body`). When to edit it depends on how the skill was invoked:
 
 - **Single-round invocation** (e.g. `/nielsen-krug-pass`): update the PR title to reflect the new fix count and add the new round under an `### Round N — <theme>` heading, as [PR title and body update](#pr-title-and-body-update) describes.
@@ -244,6 +246,7 @@ Stop the multi-round loop early — and tell the user — when any of these happ
 - You've been re-touching the same files round after round; the project is approaching saturation for this skill.
 - A fix would require behavior or design decisions you can't reasonably infer from the codebase (e.g. "should deleted items go to a trash folder?"). Those belong in a design conversation, not a polish PR.
 - The local branch and the PR have diverged (Step 1 or Step 4). Resolving that is the user's call.
+- The push fails for another reason (Step 4). Choosing where to push is the user's call.
 
 Don't pad. A PR with 25 grounded fixes is better than 40 fixes where the last 15 are wallpaper.
 
