@@ -202,6 +202,10 @@ After a single round, or after the last round of a multi-round batch (see Step 4
 
 **Title:** `ux: usability pass — N fixes from Nielsen heuristics + Don't Make Me Think`
 
+Take the title's fix count and each new round's number from the PR body, not from your memory of the session or the branch history. The body is the only record that carries over between sessions.
+- **Round number:** one more than the highest existing `### Round` heading, or 1 if there is none. Number the rounds of a multi-round batch one after another.
+- **Fix count (`N` in the title):** the total number of numbered fix items in all `### Round` sections after your update. Don't use the commit count from Step 1's `git log`, because the PR can also hold commits that aren't usability fixes, such as its original feature work or merges from the base branch.
+
 **Body structure:**
 
 ```markdown
