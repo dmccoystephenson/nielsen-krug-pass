@@ -88,7 +88,8 @@ git rev-list --left-right --count HEAD...FETCH_HEAD
 ```
 
 Act on the two counts:
-- **Second count is 0:** the local branch has everything on the PR. Continue.
+- **Both counts are 0:** the local branch matches the PR. Continue.
+- **Second count is 0, first is not:** the local branch has commits the PR doesn't, and Step 4's push would publish them with the round. Stop before making any edits, list them with `git log --oneline FETCH_HEAD..HEAD`, and tell the user. Don't push, reset, or rebase them on your own; what happens to them is the user's call.
 - **First count is 0, second is not:** the PR is ahead. Run `git merge --ff-only FETCH_HEAD`, then continue. If it refuses because of uncommitted changes, stop and tell the user.
 - **Neither count is 0:** the branches have diverged. Stop before making any edits and tell the user. Don't rebase, merge, or force-push on your own.
 
