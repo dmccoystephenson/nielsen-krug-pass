@@ -93,7 +93,7 @@ Act on the two counts:
 - **First count is 0, second is not:** the PR is ahead. Run `git merge --ff-only FETCH_HEAD`, then continue.
 - **Neither count is 0:** the branches have diverged. Stop before making any edits and tell the user. Don't rebase, merge, or force-push on your own.
 
-If any command in this sync fails, stop before making any edits and tell the user what git printed. This applies to both `git fetch` commands, the `git rev-list` count, and `git merge --ff-only`, whatever reason it gives for refusing. A failed fetch can leave `FETCH_HEAD` empty or stale, so the counts can't be trusted. The fast-forward can refuse even though `git status` printed nothing above, because that check skips untracked files: an untracked file that the PR's new commits add blocks it. Don't follow git's hint to move or remove that file, and don't delete, stash, or retry with other flags on your own. The file is the user's.
+If any command in this sync fails, stop before making any edits and tell the user what git printed. This applies to both `git fetch` commands, the `git rev-list` count, and `git merge --ff-only`, whatever reason it gives for refusing. A failed fetch can leave `FETCH_HEAD` empty, so there is nothing valid to count against. The fast-forward can refuse even though `git status` printed nothing above, because that check skips untracked files: an untracked file that the PR's new commits add blocks it. Don't follow git's hint to move or remove that file, and don't delete, stash, or retry with other flags on your own. The file is the user's.
 
 Then list the commits on this PR:
 
