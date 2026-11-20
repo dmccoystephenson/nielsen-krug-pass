@@ -136,6 +136,7 @@ Use the [commit message format](#commit-message-format) below.
 If `git commit` fails, read what it printed; usually a project hook rejected the commit. Don't bypass the hook with `--no-verify`. The failed commit leaves the fix's files staged, so settle them before the next fix, or the next commit picks them up:
 - **A `pre-commit` hook rejected the change** (a linter, or a formatter that rewrote files): treat it like a failed check in item 3. Fix the change, stage the same paths by name again, including any file the hook rewrote, and commit again. Or drop the fix.
 - **A `commit-msg` hook rejected the message** (the project enforces a different format than this skill's): stop without starting another fix, leave this fix staged, and tell the user what the hook printed. Which format wins is the user's call.
+- **Anything else** (such as a missing author identity or a signing error): handle it the same way. Stop, leave the fix staged, and tell the user what git printed. Don't change git configuration on your own.
 
 To drop a fix, put back only the fix's own paths. For files that existed before the fix, run `git restore --source=HEAD --staged --worktree <paths>`; without `--source=HEAD`, some git versions leave the files unchanged. For files the fix created, run `git restore --staged <paths>`, then delete them. Step 1 confirmed the tracked files were clean, so this discards nothing of the user's. Afterwards `git status --short` should list none of the fix's paths.
 
@@ -260,7 +261,7 @@ Stop the multi-round loop early — and tell the user — when any of these happ
 - A fix would require behavior or design decisions you can't reasonably infer from the codebase (e.g. "should deleted items go to a trash folder?"). Those belong in a design conversation, not a polish PR.
 - The local branch and the PR have diverged (Step 1 or Step 4). Resolving that is the user's call.
 - The push fails for another reason (Step 4). Choosing where to push is the user's call.
-- A project hook rejects the commit message format (Step 3). Choosing between the project's format and this skill's is the user's call.
+- A project hook rejects the commit message format, or `git commit` fails for a reason other than a hook (Step 3). Choosing between the project's format and this skill's, or changing git configuration, is the user's call.
 
 Don't pad. A PR with 25 grounded fixes is better than 40 fixes where the last 15 are wallpaper.
 
