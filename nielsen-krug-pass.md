@@ -128,10 +128,16 @@ For each fix:
 
 1. Make the edit. Keep diffs small — a fix should typically touch one file and 1–15 lines. If a fix sprawls, split it.
 2. Read the result back if you're unsure it's right.
-3. Run the project's fastest check that covers the change: its build, type-check, lint, or the tests for the file you edited. If it fails, fix the change or drop it; don't commit a broken fix. If the project has no such check, say so when you report the round.
+3. Run the project's fastest check that covers the change: its build, type-check, lint, or the tests for the file you edited. If it fails, fix the change or drop it as described below; don't commit a broken fix. If the project has no such check, say so when you report the round.
 4. Commit *before* moving to the next fix. Stage the fix's files by name (`git add <paths>`), not with `git add -A` or `git add .`, so nothing else lands in the commit. Don't batch unrelated edits into one commit.
 
 Use the [commit message format](#commit-message-format) below.
+
+If `git commit` fails, read what it printed; usually a project hook rejected the commit. Don't bypass the hook with `--no-verify`. The failed commit leaves the fix's files staged, so settle them before the next fix, or the next commit picks them up:
+- **A `pre-commit` hook rejected the change** (a linter, or a formatter that rewrote files): treat it like a failed check in item 3. Fix the change, stage the same paths by name again, including any file the hook rewrote, and commit again. Or drop the fix.
+- **A `commit-msg` hook rejected the message** (the project enforces a different format than this skill's): stop without starting another fix, leave this fix staged, and tell the user what the hook printed. Which format wins is the user's call.
+
+To drop a fix, put back only the fix's own paths. For files that existed before the fix, run `git restore --source=HEAD --staged --worktree <paths>`; without `--source=HEAD`, some git versions leave the files unchanged. For files the fix created, run `git restore --staged <paths>`, then delete them. Step 1 confirmed the tracked files were clean, so this discards nothing of the user's. Afterwards `git status --short` should list none of the fix's paths.
 
 ### 4 — Push and update the PR
 
@@ -254,6 +260,7 @@ Stop the multi-round loop early — and tell the user — when any of these happ
 - A fix would require behavior or design decisions you can't reasonably infer from the codebase (e.g. "should deleted items go to a trash folder?"). Those belong in a design conversation, not a polish PR.
 - The local branch and the PR have diverged (Step 1 or Step 4). Resolving that is the user's call.
 - The push fails for another reason (Step 4). Choosing where to push is the user's call.
+- A project hook rejects the commit message format (Step 3). Choosing between the project's format and this skill's is the user's call.
 
 Don't pad. A PR with 25 grounded fixes is better than 40 fixes where the last 15 are wallpaper.
 
@@ -265,7 +272,7 @@ Run this section when the skill may have drifted from reality — e.g. after the
 
 1. Read this skill file from top to bottom.
 2. For each command, path, or assumption, verify it is still correct:
-   - Commands and flags still exist (`git branch --show-current`, `git status --short --untracked-files=no`, `git remote -v`, `git fetch`, `git rev-list --left-right --count`, `git merge --ff-only`, `git log --oneline`, `git add`, `git commit -F`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
+   - Commands and flags still exist (`git branch --show-current`, `git status --short --untracked-files=no`, `git remote -v`, `git fetch`, `git rev-list --left-right --count`, `git merge --ff-only`, `git log --oneline`, `git add`, `git commit -F`, `git restore --source=HEAD --staged --worktree`, `git push`, `gh repo view`, `gh pr view`, `gh pr edit`, `gh issue create`).
    - The "operating principles" still match how the user invokes the skill.
    - The heuristic cheatsheet is still accurate (Nielsen's 10 heuristics are stable, but rewording happens).
    - The Preponderous-Software/roam#358 reference still resolves, and *Commit message format* still describes how its commits differ from the format.
