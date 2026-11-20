@@ -17,7 +17,7 @@ Run it from a checkout of the UI app, on the branch whose open PR should collect
 - `/nielsen-krug-pass` runs a single round.
 - "do N more rounds", said after a first round in the same session, runs N rounds back-to-back with no questions in between. The PR description is updated once, after the last round.
 
-If the branch has no open PR, or is the default branch, the skill stops and asks before making any changes. It also stops if tracked files have uncommitted changes, or if it can't look up the branch's PR. It then syncs with the remote that hosts the PR, which in a fork clone may be `upstream` rather than `origin`. It stops if no remote hosts the PR, if the sync itself fails, if the local branch has commits the PR doesn't, or if the local branch and the PR have diverged. If the push at the end of a round fails, it keeps the commits local and stops instead of choosing another remote or branch to push to.
+If the branch has no open PR, or is the default branch, the skill stops and asks before making any changes. It also stops if tracked files have uncommitted changes, or if it can't look up the branch's PR. It then syncs with the remote that hosts the PR, which in a fork clone may be `upstream` rather than `origin`. It stops if no remote hosts the PR, if the sync itself fails, if the local branch has commits the PR doesn't, or if the local branch and the PR have diverged. If a project hook rejects a commit, the skill fixes or drops that fix instead of bypassing the hook, and it stops if the hook rejects the commit message format or the commit fails for any other reason. If the push at the end of a round fails, it keeps the commits local and stops instead of choosing another remote or branch to push to.
 
 ## What a round produces
 
